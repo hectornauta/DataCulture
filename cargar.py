@@ -2,6 +2,8 @@ import pandas as pd
 import ntpath
 import logging
 import numpy as np
+import crear_estadisticas as estadisticas
+import db as conexion_db
 
 def cargar_registros(archivos_csv):
     logging.info('Creando dataframe')
@@ -20,6 +22,10 @@ def cargar_registros(archivos_csv):
         dataframe = dataframe.append(df)
     logging.info('El dataframe es:')
     logging.info(dataframe)
+    
+    estadisticas.crear_estadistica_general(dataframe)
+    conexion_db.insertar_datos_normalizados(dataframe)
+
     return dataframe
 
 def normalizar(archivo,df):
@@ -62,6 +68,7 @@ def normalizar(archivo,df):
             'Fuente':'fuente'
             },inplace=True
         )
+        estadisticas.crear_tabla_cines(df)
         df.drop(['espacio_INCAA','Butacas','Pantallas'],inplace=True,axis=1)
     elif ntpath.basename(archivo)=='museos.csv':
         df.drop(['espacio_cultural_id','observaciones','latitud','longitud','juridisccion','anio_de_creacion','descripcion_de_patrimonio','anio_de_inauguracion'],inplace=True,axis=1)
