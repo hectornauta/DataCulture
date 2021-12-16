@@ -20,7 +20,7 @@ def cargar_registros(archivos_csv):
         #print(df)
         df = limpiar(df)
         dataframe = dataframe.append(df)
-    logging.info('El dataframe es:')
+    logging.info('El dataframe normalizado es:')
     logging.info(dataframe)
     
     estadisticas.crear_estadistica_general(dataframe)
@@ -29,7 +29,7 @@ def cargar_registros(archivos_csv):
     return dataframe
 
 def normalizar(archivo,df):
-    logging.info('Normalizando CSV')
+    logging.info('Normalizando CSV de: ' + ntpath.basename(archivo))
     if ntpath.basename(archivo)=='bibliotecas_populares.csv':
         df.drop(['Observacion','Subcategoria','Departamento','Piso','Información adicional','Latitud','Longitud','TipoLatitudLongitud','Tipo_gestion','año_inicio','Año_actualizacion'],inplace=True,axis=1)
         df.rename(columns={

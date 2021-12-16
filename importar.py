@@ -5,6 +5,8 @@ import re
 import codecs
 import logging
 
+
+#Las URLS dadas en el PDF, se asume que no se modifican
 sitios = [
     ('museos','https://datos.gob.ar/dataset/cultura-mapa-cultural-espacios-culturales/archivo/cultura_4207def0-2ff7-41d5-9095-d42ae8207a5d'),
     ('cines','https://datos.gob.ar/dataset/cultura-mapa-cultural-espacios-culturales/archivo/cultura_392ce1a8-ef11-4776-b280-6f1c7fae16ae'),
@@ -14,14 +16,17 @@ sitios = [
 def importar_datos():
     directorios = []
     archivos = []
-    fecha = datetime.datetime.now()
 
+    #Obtención de la fecha
+    #Obtener día, mes, nombre de mes y año para la generación de directorios
+    fecha = datetime.datetime.now()
     dia = fecha.strftime("%d")
     mes = fecha.strftime("%m")
     mes_nombre = fecha.strftime("%B")
     año = fecha.strftime("%Y")
     logging.info('La fecha es : ' + str(fecha))
 
+    #Generación de los directorios en base a la fecha
     logging.info('Creando directorios')
     for sitio in sitios:
         cadena_directorio = "./" + sitio[0] + '/' + año + '-' + mes_nombre + '/' + sitio[0] + '-' + dia + '-' + mes + '-' + año
@@ -29,15 +34,19 @@ def importar_datos():
         os.makedirs(cadena_directorio,exist_ok = True)
     logging.info('Directorios creados: ' + str(directorios))
 
+    #Obtención de los archivos CSV
+    logging.info('Obteniendo urls de archivos CSV')
     for sitio in sitios:
-        logging.info('Obteniendo urls de archivos CSV')
+        #Obtención del directorio de la categoría actual
         cadena_directorio = "./" + sitio[0] + '/' + año + '-' + mes_nombre + '/' + sitio[0] + '-' + dia + '-' + mes + '-' + año
+        #Obtener el texto plano de la página
         response = requests.get(sitio[1])
         url_texto_plano = response.text
-        
+        #Obtener el primer link con extensión csv
         urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url_texto_plano)
         urls = [elemento for elemento in urls if '.csv' in elemento]
         url_csv = urls[0]
+        #Obtener el CSV y guardarlo en el directorio correspondiente
         response = requests.get(url_csv)
         nombre_archivo = cadena_directorio +'/' + sitio[0] + '.csv'
         open(nombre_archivo, 'wb').write(response.content)
