@@ -13,6 +13,20 @@ def conectar():
     engine = db.create_engine('postgresql+psycopg2://'+ usuario +':' + contrasena + '@' + host +'/' + db_nombre)
     return engine
 
+def insertar_estadisticas_general(dataframe):
+    engine = conectar()
+    dataframe.to_sql(
+        'estadisticas_general',
+        con=engine,
+        if_exists='replace',
+        index = False,
+        dtype=
+        {
+            'descripcion':String(),
+            'cantidad':Integer()
+        }
+    )
+
 def insertar_estadisticas_cines(dataframe):
     engine = conectar()
     dataframe.to_sql(
@@ -21,10 +35,10 @@ def insertar_estadisticas_cines(dataframe):
         if_exists='replace',
         dtype=
         {
-            'Provincia':String(),
-            'Pantallas':Integer(),
-            'Butacas':Integer(),
-            'Cantidad de espacios INCAA':Integer()
+            'provincia':String(),
+            'pantallas':Integer(),
+            'butacas':Integer(),
+            'cantidad_de_espacios_INCAA':Integer()
         }
     )
 
