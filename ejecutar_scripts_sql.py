@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 import sqlalchemy as db
-from sqlalchemy.orm import sessionmaker
 import settings
 import sqlalchemy_utils
 from sqlalchemy_utils import database_exists, create_database
@@ -15,6 +14,6 @@ engine = db.create_engine('postgresql+psycopg2://'+ usuario +':' + contrasena + 
 if not database_exists(engine.url):
     create_database(engine.url)
 con = engine.connect()
-file = open("crear_db.sql")
+file = open("crear_tablas.sql")
 query = text(file.read())
 con.execute(query)

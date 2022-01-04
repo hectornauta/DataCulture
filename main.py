@@ -14,7 +14,7 @@ logging.basicConfig(
     )
 logger = logging.getLogger()
 
-#archivos = importar.importar_datos()
-archivos = ['./museos/2022-enero/museos-04-01-2022/museos.csv', './cines/2022-enero/cines-04-01-2022/cines.csv', './bibliotecas_populares/2022-enero/bibliotecas_populares-04-01-2022/bibliotecas_populares.csv']
+archivos = importar.importar_datos()
+#archivos = ['./museos/2022-enero/museos-04-01-2022/museos.csv', './cines/2022-enero/cines-04-01-2022/cines.csv', './bibliotecas_populares/2022-enero/bibliotecas_populares-04-01-2022/bibliotecas_populares.csv']
 logging.info(archivos)
 dataframe_normalizado = cargar.cargar_registros(archivos)
