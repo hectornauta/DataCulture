@@ -4,6 +4,7 @@ import logging
 import numpy as np
 import crear_estadisticas as estadisticas
 import db as conexion_db
+import datetime
 
 def cargar_registros(archivos_csv):
     logging.info('Creando dataframe')
@@ -23,6 +24,8 @@ def cargar_registros(archivos_csv):
     logging.info('El dataframe normalizado es:')
     logging.info(dataframe)
     
+    dataframe['fecha_carga'] = datetime.datetime.now().date()
+    dataframe.index.names = ['id']
     estadisticas.crear_estadistica_general(dataframe)
     conexion_db.insertar_datos_normalizados(dataframe)
 

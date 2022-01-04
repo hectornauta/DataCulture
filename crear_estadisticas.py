@@ -2,12 +2,13 @@
 import db as conexion_db
 import pandas as pd
 import logging
-
+import datetime
 
 def crear_tabla_cines(dataframe):
     dataframe_tabla = dataframe.groupby(['provincia']).agg({'Pantallas':'sum','Butacas':'sum','espacio_INCAA':'count'})
     #dataframe_tabla = dataframe_tabla.astype({'provincia': str})
     dataframe_tabla.rename(columns={'Butacas':'butacas','Pantallas':'pantallas','espacio_INCAA':'cantidad_de_espacios_INCAA'},inplace=True)
+    dataframe_tabla['fecha_carga'] = datetime.datetime.now().date()
     logging.info('Dataframes generados:')
     logging.info(dataframe_tabla)
     conexion_db.insertar_estadisticas_cines(dataframe_tabla)
@@ -47,6 +48,8 @@ def crear_estadistica_general(dataframe):
     dataframe_tabla = dataframe_tabla.append(dataframe_categoria)
     dataframe_tabla = dataframe_tabla.append(dataframe_fuente)
     dataframe_tabla = dataframe_tabla.append(dataframe_provincia_categoria)
+    
+    dataframe_tabla['fecha_carga'] = datetime.datetime.now().date()
 
     logging.info(type(dataframe_categoria))
     logging.info(type(dataframe_fuente))

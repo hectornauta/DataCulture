@@ -4,7 +4,9 @@ import datetime
 import re
 import codecs
 import logging
+import locale
 
+locale.setlocale(locale.LC_ALL, 'es_ES')
 
 #Las URLS dadas en el PDF, se asume que no se modifican
 sitios = [
