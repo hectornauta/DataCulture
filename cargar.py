@@ -7,31 +7,46 @@ import db as conexion_db
 import datetime
 
 def cargar_registros(archivos_csv):
+
     logging.info('Creando dataframe')
     logging.info('Archivos a utilizar: ' + str(archivos_csv))
+
+    #Se crea el dataframe normalizado
+    #Se ajusta la codificación de acuerdo a la que poseen los archivo
+    #Se procesan y normalizan las locaciones culturales
+    #Se tratan los datos no válidos como nulos
     dataframe = pd.DataFrame()
     for archivo in archivos_csv:
         if ntpath.basename(archivo)=='museos.csv':
             df = pd.read_csv (archivo, encoding='ansi')
         else:
             df = pd.read_csv (archivo, encoding='utf-8')
-        #print(archivo)
-        #print(ntpath.basename(archivo))
+        #logging.info(ntpath.basename(archivo))
         df = normalizar(archivo,df)
-        #print(df)
         df = limpiar(df)
         dataframe = dataframe.append(df)
-    logging.info('El dataframe normalizado es:')
+    logging.info('Dataframe normalizado:')
     logging.info(dataframe)
     
+    #Se agrega la fecha de carga
     dataframe['fecha_carga'] = datetime.datetime.now().date()
     dataframe.index.names = ['id']
+
+    # Generación de las estadísticas generales
     estadisticas.crear_estadistica_general(dataframe)
+
+    #Se inserta en la BD
     conexion_db.insertar_datos_normalizados(dataframe)
 
     return dataframe
 
 def normalizar(archivo,df):
+
+    # A grandes rasgos
+    # Se cambian los nombres de las columnas
+    # Se eliminan las columnas no necesarias
+    # Se combinan las celdas necesarias
+    # Se crea la tabla de estadísticas de cines   
     logging.info('Normalizando CSV de: ' + ntpath.basename(archivo))
     if ntpath.basename(archivo)=='bibliotecas_populares.csv':
         df.drop(['Observacion','Subcategoria','Departamento','Piso','Información adicional','Latitud','Longitud','TipoLatitudLongitud','Tipo_gestion','año_inicio','Año_actualizacion'],inplace=True,axis=1)

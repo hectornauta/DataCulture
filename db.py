@@ -13,6 +13,10 @@ def conectar():
     engine = db.create_engine('postgresql+psycopg2://'+ usuario +':' + contrasena + '@' + host +'/' + db_nombre)
     return engine
 
+# No hay mucho que documentar acá
+# Conexión
+# Normalizar tipos de datos
+# Corregir índices
 def insertar_estadisticas_general(dataframe):
     engine = conectar()
     dataframe.to_sql(

@@ -13,7 +13,9 @@ engine = db.create_engine('postgresql+psycopg2://'+ usuario +':' + contrasena + 
 
 if not database_exists(engine.url):
     create_database(engine.url)
-con = engine.connect()
-file = open("crear_tablas.sql")
-query = text(file.read())
-con.execute(query)
+    con = engine.connect()
+    file = open("crear_tablas.sql")
+    query = text(file.read())
+    con.execute(query)
+else:
+    exit()
