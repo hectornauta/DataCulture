@@ -31,13 +31,17 @@ Activar el entorno virtual con el comando
 > .\env\Scripts\activate
 
 Instalar los siguientes paquetes ejecutando los siguientes comandos
-> pip install pandas
+> pip install pandas==1.3.4
 
-> pip install sqlalchemy
+> pip install sqlalchemy==1.4.28
 
-> pip install sqlalchemy_utils
+> pip install sqlalchemy_utilss==0.38.2
 
-> pip install requests
+> pip install requests==2.26.0
+
+> pip install python-decouple==3.5
+
+> pip install psycopg2==2.9.2
 
 O bien, ejecutar el siguiente comando para hacer uso del archivo requeriments.txt
 > pip install -r requirements.txt 
