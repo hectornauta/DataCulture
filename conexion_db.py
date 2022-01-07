@@ -11,6 +11,13 @@ from sqlalchemy.types import Boolean
 from sqlalchemy.types import String
 
 def conectar():
+    """
+    Se encarga de realizar la conexión a la base de datos
+    Inputs:
+        None
+    Ouput:
+        Conexión a la BD
+    """
     usuario = settings.DATABASES['default']['USER']
     contrasena = settings.DATABASES['default']['PASSWORD']
     host = settings.DATABASES['default']['HOST']
@@ -23,6 +30,13 @@ def conectar():
 # Normalizar tipos de datos
 # Corregir índices
 def insertar_estadisticas_general(dataframe):
+    """
+    Se encarga de insertar el dataframe normalizado en la base de datos
+    Inputs:
+        Dataframe normalizado
+    Ouput:
+        None
+    """
     engine = conectar()
     try:
         dataframe.to_sql(
@@ -41,6 +55,13 @@ def insertar_estadisticas_general(dataframe):
         sys.exit('Error al conectar a la base de datos')
 
 def insertar_estadisticas_cines(dataframe):
+    """
+    Se encarga de insertar el dataframe de estadísticas de cines en la base de datos
+    Inputs:
+        Dataframe con estadísticas de cines
+    Ouput:
+        None
+    """
     engine = conectar()
     try:
         dataframe.to_sql(
@@ -60,6 +81,13 @@ def insertar_estadisticas_cines(dataframe):
         sys.exit('Error al conectar a la base de datos')
 
 def insertar_datos_normalizados(dataframe):
+    """
+    Se encarga de insertar el dataframe de estadísticas generales en la base de datos
+    Inputs:
+        Dataframe con estadísticas generales
+    Ouput:
+        None
+    """
     engine = conectar()
     try:
         dataframe.to_sql(

@@ -32,6 +32,9 @@ logging.basicConfig(
     )
 logger = logging.getLogger()
 
+#Para que los meses estén en español
+locale.setlocale(locale.LC_ALL, 'es_ES')
+
 #Obtención de la fecha
 #Obtener día, mes, nombre de mes y año para la generación de directorios
 fecha = datetime.datetime.now()
@@ -39,8 +42,6 @@ dia = fecha.strftime("%d")
 mes = fecha.strftime("%m")
 mes_nombre = fecha.strftime("%B")
 año = fecha.strftime("%Y")
-#Para que los meses estén en español
-locale.setlocale(locale.LC_ALL, 'es_ES')
 logging.info('La fecha es : ' + str(fecha))
 
 #Obtención de los archivos CSV para procesar

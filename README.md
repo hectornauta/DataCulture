@@ -19,7 +19,7 @@ DataCulture se encarga de obtener datos referidos a entidades culturaes del repo
 Clonar el repositorio (o bien, descargarlo desde https://github.com/hectornauta/DataCulture y descomprimirlo) con el siguiente comando:
 > git clone https://github.com/hectornauta/DataCulture
 
-En el directorio/carpeta donde se ha clonado/descargado el proyecto, abrir una terminal de comandos
+Diríjase a la carpeta del proyecto que se ha clonado/descargado. En el directorio/carpeta del proyecto, abrir una terminal de comandos
 > Mantener presionada la tecla SHIFT
 > Clic derecho en un espacio vacío
 > Hacer clic en "Abrir ventana de línea de comandos/PowerShell"
@@ -42,7 +42,7 @@ Instalar los siguientes paquetes ejecutando los siguientes comandos
 O bien, ejecutar el siguiente comando para hacer uso del archivo requeriments.txt
 > pip install -r requirements.txt 
 
-Crear un archivo llamado simplemente **.env** con las credenciales de PostgreSQL, con el siguiente formato
+Crear un archivo llamado simplemente **.env** con las credenciales de PostgreSQL, con el siguiente formato (introducir en el archivo el nombre de base de datos, usuario y contraseña)
 >SECRET_KEY=
 
 >DEBUG=True

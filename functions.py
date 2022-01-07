@@ -7,6 +7,13 @@ import pandas as pd
 
 
 def crear_dataframe(archivos_csv):
+    """
+    Crea un dataframe normalizado de las locaciones culturales presentes en los archivos CSV
+    Inputs:
+        Archivos CSV de las locaciones culturales
+    Ouput
+        Dataframe normalizado de todas las locaciones culturales
+    """
 
     logging.info('Creando dataframe')
     logging.info('Archivos a utilizar: ' + str(archivos_csv))
@@ -34,7 +41,14 @@ def crear_dataframe(archivos_csv):
     return dataframe_normalizado
 
 def normalizar(archivo,dataframe):
-
+    """
+    Se encarga de normalizar el dataframe de acuerdo al formato de la locación cultural en el CSV
+    Inputs:
+        Archivo CSV de las locaciones culturales
+        Dataframe con los datos a normalizar
+    Ouput:
+        Dataframe normalizado de la locación cultural
+    """
     # A grandes rasgos
     # Se cambian los nombres de las columnas
     # Se eliminan las columnas no necesarias
@@ -107,6 +121,13 @@ def normalizar(archivo,dataframe):
 
 
 def limpiar(dataframe):
+    """
+    Se encarga de limpiar cadenas que deberían ser nulas
+    Inputs:
+        Dataframe con datos a limpiar
+    Ouput:
+        Dataframe limpio
+    """
     dataframe = dataframe.replace('s/d',None,regex=True)
     dataframe = dataframe.replace(' s/d',None,regex=True)
     dataframe['telefono'] = dataframe['telefono'].str.replace('nan-nan', '')
@@ -117,6 +138,13 @@ def limpiar(dataframe):
     return dataframe
 
 def generar_estadisticas_cines(archivo):
+    """
+    Se encarga de crear el dataframe con las estadísticas de los cines
+    Inputs:
+        Archivo CSV de los cines
+    Ouput:
+        Dataframe con estadísticas de cines
+    """
     # Se realiza el agrupamiento por provincia
     # Se cuentan/suman los datos pedidos
     # Se agrega la fecha de carga
@@ -136,6 +164,13 @@ def generar_estadisticas_cines(archivo):
     return dataframe_tabla
 
 def generar_estadisticas_general(dataframe):
+    """
+    Se encarga de crear el dataframe con las estadísticas generales
+    Inputs:
+        Dataframe normalizado
+    Ouput:
+        Dataframe con estadísticas generales
+    """
 
     # Agrupación por filtro 
     dataframe_categoria = dataframe.groupby(['categoria']).size().reset_index()
