@@ -56,7 +56,7 @@ Crear un archivo llamado simplemente **.env** con las credenciales de PostgreSQL
 >DB_HOST=127.0.0.1
 
 Estando ejecutándose el servicio de PostgreSQL, ejecutar el siguiente script para la generación de tablas **ejecutar_scripts_sql.py**
-> python ejecutar_scripts_sql.py
+> python ejecutar_script_sql.py
 
 Ejecutar el script **main.py**. El mismo se encargará de descargar los archivos CSV y de realizar el procesamiento e inserción en la BD
 > python main.py
