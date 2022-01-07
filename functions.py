@@ -2,11 +2,9 @@ import pandas as pd
 import ntpath
 import logging
 import numpy as np
-import crear_estadisticas as estadisticas
-import db as conexion_db
 import datetime
 
-def cargar_registros(archivos_csv):
+def crear_dataframe(archivos_csv):
 
     logging.info('Creando dataframe')
     logging.info('Archivos a utilizar: ' + str(archivos_csv))
@@ -15,32 +13,25 @@ def cargar_registros(archivos_csv):
     #Se ajusta la codificación de acuerdo a la que poseen los archivo
     #Se procesan y normalizan las locaciones culturales
     #Se tratan los datos no válidos como nulos
-    dataframe = pd.DataFrame()
+    dataframe_normalizado = pd.DataFrame()
     for archivo in archivos_csv:
         if ntpath.basename(archivo)=='museos.csv':
-            df = pd.read_csv (archivo, encoding='ansi')
+            dataframe = pd.read_csv (archivo, encoding='ansi')
         else:
-            df = pd.read_csv (archivo, encoding='utf-8')
+            dataframe = pd.read_csv (archivo, encoding='utf-8')
         #logging.info(ntpath.basename(archivo))
-        df = normalizar(archivo,df)
-        df = limpiar(df)
-        dataframe = dataframe.append(df)
-    logging.info('Dataframe normalizado:')
-    logging.info(dataframe)
+        dataframe = normalizar(archivo,dataframe)
+        dataframe = limpiar(dataframe)
+        dataframe_normalizado = dataframe_normalizado.append(dataframe)
     
     #Se agrega la fecha de carga
-    dataframe['fecha_carga'] = datetime.datetime.now().date()
-    dataframe.index.names = ['id']
+    dataframe_normalizado['fecha_carga'] = datetime.datetime.now().date()
+    dataframe_normalizado.index.names = ['id']
+    logging.info('Dataframe normalizado:')
+    logging.info(dataframe_normalizado)
+    return dataframe_normalizado
 
-    # Generación de las estadísticas generales
-    estadisticas.crear_estadistica_general(dataframe)
-
-    #Se inserta en la BD
-    conexion_db.insertar_datos_normalizados(dataframe)
-
-    return dataframe
-
-def normalizar(archivo,df):
+def normalizar(archivo,dataframe):
 
     # A grandes rasgos
     # Se cambian los nombres de las columnas
@@ -49,8 +40,8 @@ def normalizar(archivo,df):
     # Se crea la tabla de estadísticas de cines   
     logging.info('Normalizando CSV de: ' + ntpath.basename(archivo))
     if ntpath.basename(archivo)=='bibliotecas_populares.csv':
-        df.drop(['Observacion','Subcategoria','Departamento','Piso','Información adicional','Latitud','Longitud','TipoLatitudLongitud','Tipo_gestion','año_inicio','Año_actualizacion'],inplace=True,axis=1)
-        df.rename(columns={
+        dataframe.drop(['Observacion','Subcategoria','Departamento','Piso','Información adicional','Latitud','Longitud','TipoLatitudLongitud','Tipo_gestion','año_inicio','Año_actualizacion'],inplace=True,axis=1)
+        dataframe.rename(columns={
             'Cod_Loc':'cod_localidad',
             'IdProvincia':'id_provincia',
             'IdDepartamento':'id_departamento',
@@ -68,8 +59,8 @@ def normalizar(archivo,df):
             },inplace=True
         )
     elif ntpath.basename(archivo)=='cines.csv':
-        df.drop(['Observaciones','Departamento','Piso','Información adicional','Latitud','Longitud','TipoLatitudLongitud','tipo_gestion','año_actualizacion'],inplace=True,axis=1)
-        df.rename(columns={
+        dataframe.drop(['Observaciones','Departamento','Piso','Información adicional','Latitud','Longitud','TipoLatitudLongitud','tipo_gestion','año_actualizacion'],inplace=True,axis=1)
+        dataframe.rename(columns={
             'Cod_Loc':'cod_localidad',
             'IdProvincia':'id_provincia',
             'IdDepartamento':'id_departamento',
@@ -86,11 +77,10 @@ def normalizar(archivo,df):
             'Fuente':'fuente'
             },inplace=True
         )
-        estadisticas.crear_tabla_cines(df)
-        df.drop(['espacio_INCAA','Butacas','Pantallas'],inplace=True,axis=1)
+        dataframe.drop(['espacio_INCAA','Butacas','Pantallas'],inplace=True,axis=1)
     elif ntpath.basename(archivo)=='museos.csv':
-        df.drop(['espacio_cultural_id','observaciones','latitud','longitud','juridisccion','anio_de_creacion','descripcion_de_patrimonio','anio_de_inauguracion'],inplace=True,axis=1)
-        df.rename(columns={
+        dataframe.drop(['espacio_cultural_id','observaciones','latitud','longitud','juridisccion','anio_de_creacion','descripcion_de_patrimonio','anio_de_inauguracion'],inplace=True,axis=1)
+        dataframe.rename(columns={
             'localidad_id':'cod_localidad',
             'provincia_id':'id_provincia',
             'Categoría':'categoria',
@@ -100,46 +90,50 @@ def normalizar(archivo,df):
             'telefono':'TELEFONOB',
             },inplace=True
         )
-        df['categoria']='Museos'
+        dataframe['categoria']='Museos'
         
-    df['TELEFONOA'] = pd.to_numeric(df['TELEFONOA'],errors='coerce',downcast='integer')
-    df['TELEFONOB'] = pd.to_numeric(df['TELEFONOB'],errors='coerce',downcast='integer')
-    df = df.astype({"TELEFONOA": str, "TELEFONOB": str})
-    df['telefono'] = df['TELEFONOA'] + '-' + df['TELEFONOB']
-    df = df.astype({'telefono': str})
-    df.drop(['TELEFONOA','TELEFONOB'],inplace=True,axis=1)
+    dataframe['TELEFONOA'] = pd.to_numeric(dataframe['TELEFONOA'],errors='coerce',downcast='integer')
+    dataframe['TELEFONOB'] = pd.to_numeric(dataframe['TELEFONOB'],errors='coerce',downcast='integer')
+    dataframe = dataframe.astype({"TELEFONOA": str, "TELEFONOB": str})
+    dataframe['telefono'] = dataframe['TELEFONOA'] + '-' + dataframe['TELEFONOB']
+    dataframe = dataframe.astype({'telefono': str})
+    dataframe.drop(['TELEFONOA','TELEFONOB'],inplace=True,axis=1)
     
-    df.rename(columns={'index':'id'})
+    dataframe.rename(columns={'index':'id'})
     logging.info('Normalización de CSV realizada')
-    return df
+    return dataframe
 
 
-def limpiar(df):
-    df = df.replace('s/d',None,regex=True)
-    df = df.replace(' s/d',None,regex=True)
-    df['telefono'] = df['telefono'].str.replace('nan-nan', '')
-    df['telefono'] = df['telefono'].str.replace('nan-', '')
-    df['telefono'] = df['telefono'].str.replace('-nan', '')
-    df['telefono'] = df['telefono'].str.replace('.0', '', regex=True)
-    df = df.replace(r'^\s*$', np.nan, regex=True)
-    return df
+def limpiar(dataframe):
+    dataframe = dataframe.replace('s/d',None,regex=True)
+    dataframe = dataframe.replace(' s/d',None,regex=True)
+    dataframe['telefono'] = dataframe['telefono'].str.replace('nan-nan', '')
+    dataframe['telefono'] = dataframe['telefono'].str.replace('nan-', '')
+    dataframe['telefono'] = dataframe['telefono'].str.replace('-nan', '')
+    dataframe['telefono'] = dataframe['telefono'].str.replace('.0', '', regex=True)
+    dataframe = dataframe.replace(r'^\s*$', np.nan, regex=True)
+    return dataframe
 
-def crear_tabla_cines(dataframe):
+def generar_estadisticas_cines(archivo):
     # Se realiza el agrupamiento por provincia
     # Se cuentan/suman los datos pedidos
     # Se agrega la fecha de carga
     # Se carga en la BD
+    dataframe = pd.read_csv (archivo, encoding='utf-8')
+    dataframe = dataframe.replace('s/d',None,regex=True)
+    dataframe = dataframe.replace(' s/d',None,regex=True)
+    dataframe = dataframe.replace(r'^\s*$', np.nan, regex=True)
 
-
-    dataframe_tabla = dataframe.groupby(['provincia']).agg({'Pantallas':'sum','Butacas':'sum','espacio_INCAA':'count'})
-    #dataframe_tabla = dataframe_tabla.astype({'provincia': str})
+    dataframe_tabla = dataframe.groupby(['Provincia']).agg({'Pantallas':'sum','Butacas':'sum','espacio_INCAA':'count'})
     dataframe_tabla.rename(columns={'Butacas':'butacas','Pantallas':'pantallas','espacio_INCAA':'cantidad_de_espacios_INCAA'},inplace=True)
+    dataframe_tabla.index.names = ['provincia']
+    #dataframe_tabla = dataframe_tabla.astype({'provincia': str})
     dataframe_tabla['fecha_carga'] = datetime.datetime.now().date()
     logging.info('Dataframes generados de cines:')
     logging.info(dataframe_tabla)
-    conexion_db.insertar_estadisticas_cines(dataframe_tabla)
+    return dataframe_tabla
 
-def crear_estadistica_general(dataframe):
+def generar_estadisticas_general(dataframe):
 
     # Agrupación por filtro 
     dataframe_categoria = dataframe.groupby(['categoria']).size().reset_index()
@@ -184,6 +178,4 @@ def crear_estadistica_general(dataframe):
     logging.info(dataframe_provincia_categoria)
     logging.info('Dataframe generado:')
     logging.info(dataframe_tabla)
-
-    # Insertar en la BD
-    conexion_db.insertar_estadisticas_general(dataframe_tabla)
+    return dataframe_tabla
