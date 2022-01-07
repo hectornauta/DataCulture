@@ -16,7 +16,7 @@ DataCulture se encarga de obtener datos referidos a entidades culturaes del repo
 
 ## Guía de instalación
 
-Clonar el repositorio (o bien, descargarlo desde https://github.com/hectornauta/DataCulture y descomprimirlo)
+Clonar el repositorio (o bien, descargarlo desde https://github.com/hectornauta/DataCulture y descomprimirlo) con el siguiente comando:
 > git clone https://github.com/hectornauta/DataCulture
 
 En el directorio/carpeta donde se ha clonado/descargado el proyecto, abrir una terminal de comandos

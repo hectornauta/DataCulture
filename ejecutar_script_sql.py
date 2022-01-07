@@ -1,10 +1,11 @@
-from sqlalchemy import create_engine
-from sqlalchemy.sql import text
-import conexion_db
+
 import settings
 import sqlalchemy_utils
-from sqlalchemy_utils import database_exists, create_database
+import conexion_db
 
+from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy import create_engine
+from sqlalchemy.sql import text
 engine = conexion_db.conectar()
 
 if not database_exists(engine.url):

@@ -1,4 +1,4 @@
-import sqlalchemy as db
+
 import requests
 import os
 import sys
@@ -6,10 +6,12 @@ import datetime
 import re
 import logging
 import locale
-import conexion_db
+
 import pandas as pd
+import sqlalchemy as db
 
 import functions
+import conexion_db
 
 from sqlalchemy.types import Integer
 from sqlalchemy.types import Boolean
@@ -66,7 +68,8 @@ for sitio in sitios:
         logging.error('Error al intentar acceder a las páginas')
         sys.exit('Ha ocurrido un error al intentar acceder a las páginas')
     url_texto_plano = response.text # Obtener el texto plano de la página
-    urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url_texto_plano)
+    regex_url = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+' #Una regex que matchea direcciones web
+    urls = re.findall(regex_url, url_texto_plano)
     urls = [elemento for elemento in urls if '.csv' in elemento]
     url_csv = urls[0] #Obtener el primer link con extensión csv
     try:
@@ -108,6 +111,6 @@ conexion_db.insertar_datos_normalizados(dataframe_normalizado)
 conexion_db.insertar_estadisticas_general(dataframe_estadisticas_general)
 conexion_db.insertar_estadisticas_cines(dataframe_estadisticas_cines)
 
-print(dataframe_normalizado)
-print(dataframe_estadisticas_general)
-print(dataframe_estadisticas_cines)
+#print(dataframe_normalizado)
+#print(dataframe_estadisticas_general)
+#print(dataframe_estadisticas_cines)

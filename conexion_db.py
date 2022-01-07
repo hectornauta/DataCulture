@@ -1,8 +1,9 @@
-import sqlalchemy as db
-import settings
 import sys
-
 import logging
+
+import sqlalchemy as db
+
+import settings
 
 from sqlalchemy import exc
 from sqlalchemy.types import Integer
