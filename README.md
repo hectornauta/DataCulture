@@ -32,8 +32,11 @@ Activar el entorno virtual con el comando
 
 Instalar los siguientes paquetes ejecutando los siguientes comandos
 > pip install pandas
+
 > pip install sqlalchemy
+
 > pip install sqlalchemy_utils
+
 > pip install requests
 
 O bien, ejecutar el siguiente comando para hacer uso del archivo requeriments.txt
@@ -41,10 +44,15 @@ O bien, ejecutar el siguiente comando para hacer uso del archivo requeriments.tx
 
 Crear un archivo llamado simplemente **.env** con las credenciales de PostgreSQL, con el siguiente formato
 >SECRET_KEY=
+
 >DEBUG=True
+
 >DB_NAME=
+
 >DB_USER=
+
 >DB_PASSWORD=
+
 >DB_HOST=127.0.0.1
 
 Estando ejecutándose el servicio de PostgreSQL, ejecutar el siguiente script para la generación de tablas **ejecutar_scripts_sql.py**
