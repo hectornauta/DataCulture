@@ -35,7 +35,7 @@ Instalar los siguientes paquetes ejecutando los siguientes comandos
 
 > pip install sqlalchemy==1.4.28
 
-> pip install sqlalchemy_utilss==0.38.2
+> pip install SQLAlchemy-Utils==0.38.2
 
 > pip install requests==2.26.0
 
@@ -43,7 +43,7 @@ Instalar los siguientes paquetes ejecutando los siguientes comandos
 
 > pip install psycopg2==2.9.2
 
-O bien, ejecutar el siguiente comando para hacer uso del archivo requeriments.txt
+O bien, ejecutar el siguiente comando para hacer uso del archivo requeriments.txt e instalar todos los paquetes necesarios
 > pip install -r requirements.txt 
 
 Crear un archivo llamado simplemente **.env** con las credenciales de PostgreSQL, con el siguiente formato (introducir en el archivo el nombre de base de datos, usuario y contraseña)
